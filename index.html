@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacSerial Online</title>
+    <meta name="description" content="A web version of the MacSerial tool provided by OpenCorePkg, powered by WebAssembly via Emscripten.">
+    <style>
+        body {
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 20px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            resize: both;
+            overflow: auto;
+            width:60%;
+        }
+        input {
+            font-family: monospace;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>MacSerial Online</h1>
+    <p>Powered by WebAssembly via Emscripten. See source code <a href="https://github.com/Jazzzny/macserial-online">here</a>.</p>
+
+    <input type="text" id="args" placeholder="Enter argument(s)">
+    <button onclick="runEngine()">Run</button>
+    <pre id="output"></pre>
+
+    <h2>Common Uses</h2>
+    <ul>
+        <li><code>-h</code> - Show help</li>
+        <li><code>-m MODELCODE1,1</code> - Generate Serial Numbers and MLB for specified model.</li>
+        <li><code>-i SERIALNUMBER</code> - View information about a given Mac serial.</li>
+    </ul>
+
+    <script>
+        var Module = {
+            print: (text) => {
+                document.getElementById('output').textContent += text + '\n';
+            },
+            printErr: (text) => {
+                document.getElementById('output').textContent += 'Error: ' + text + '\n';
+            },
+            onRuntimeInitialized: () => {
+            }
+        };
+    </script>
+    <script src="macserial.js"></script>
+    <script>
+        function runEngine() {
+            document.getElementById('output').textContent = '';
+            const argsInput = document.getElementById('args').value;
+            const argsArray = argsInput.split(' ');
+
+            Module.callMain(argsArray);
+        }
+    </script>
+</body>
+</html>
